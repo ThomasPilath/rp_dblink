@@ -21,12 +21,6 @@ export class Owned_vehicles {
     @Column({ type: "int", default: 0 })
     stored: number;
 
-    @Column({ type: "varchar", length: 60, default: null })
-    parking: string;
-
-    @Column({ type: "varchar", length: 60, default: null })
-    pound: string;
-
     @Column({ type: "float", default: 0 })
     mileage: number;
 
