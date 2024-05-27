@@ -1,7 +1,31 @@
 import { Entity, Column, CreateDateColumn, UpdateDateColumn, PrimaryColumn } from "typeorm";
 
+export interface UsersEntityInterface {
+    identifier: string;
+    accounts?: string;
+    group: string;
+    inventory?: string;
+    job: string;
+    job_grade: number;
+    metadata?: string;
+    position?: string;
+    firstname?: string;
+    lastname?: string;
+    dateofbirth?: string;
+    sex?: string;
+    height?: number;
+    status?: string;
+    is_dead: boolean;
+    disabled: boolean;
+    last_property?: string;
+    created_at: Date;
+    last_seen: Date;
+    phone_number?: string;
+    pincode?: number;
+}
+
 @Entity()
-export class Users {
+export class Users implements UsersEntityInterface {
     @PrimaryColumn({ type: "varchar", length: 46, unique: true, nullable: false })
     identifier: string;
 

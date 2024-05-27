@@ -1,8 +1,8 @@
-import { UserInterface, UserServiceInterface } from "../Interfaces/UsersInterfaces";
+import { AccountsInterface, ActivityInterface, CaracterInterface, IdentityInterface, InventoryItemsInterface, PlayerInterface, UserInterface } from "../Interfaces/UsersInterfaces";
 import { AppDataSource } from "../data-source"
-import { Users } from "../entities/Users"
+import { Users, UsersEntityInterface } from "../entities/Users"
 
-const getUser = async (user: UserInterface) => {
+const getUser = async (user: UsersEntityInterface): Promise<UserInterface> => {
     const {
       identifier,
       accounts,
@@ -10,7 +10,6 @@ const getUser = async (user: UserInterface) => {
       inventory,
       job,
       job_grade,
-      loadout,
       metadata,
       position,
       firstname,
@@ -18,7 +17,6 @@ const getUser = async (user: UserInterface) => {
       dateofbirth,
       sex,
       height,
-      skin,
       status,
       is_dead,
       disabled,
@@ -29,56 +27,58 @@ const getUser = async (user: UserInterface) => {
       pincode,
     } = user;
     
-    const [playerCharId, steamId] =  identifier.split(":");
+    const [identifierCharId, steamId] =  identifier.split(":");
+    const charId = identifierCharId.slice(4)
     const created_at_date =  created_at.toISOString().split("T")[0];
     const last_seen_date =  last_seen.toISOString().split("T")[0];
+    const userInventory: InventoryItemsInterface[] = JSON.parse(inventory)
+    const userAccounts: AccountsInterface = JSON.parse(accounts)
     
-    const player = {
+    const player: PlayerInterface = {
       steamId,
-      playerCharId,
+      charId,
       group,
       last_seen_date
     };
     // console.log("player :", player)
 
-    const identity = {
+    const identity: IdentityInterface = {
       firstname,
       lastname,
       dateofbirth,
       sex,
-      height
+      height,
+      phone_number,
+      pincode
     };
     // console.log("identity :", identity)
 
-    const activities = {
+    const activity: ActivityInterface = {
       job,
       job_grade
     };
     // console.log("activities :", activities)
 
-    const utilities = {
-      phone_number,
-      pincode,
-      account: JSON.parse(accounts),
-      inventory: JSON.parse(inventory),
-    };
-    // console.log("utilities :", utilities)
-
-    const caracter = {
+    const caracter: CaracterInterface = {
       created_at_date,
       status,
       is_dead,
       disabled,
       position: JSON.parse(position),
       last_property,
-      skin: JSON.parse(skin),
-      loadout,
-      metadata,
+      metadata: JSON.parse(metadata),
     };
     // console.log("caracter :", caracter)
 
     
-    return { player, identity, activities, utilities, caracter };
+    return {
+      player: player,
+      identity: identity,
+      activity: activity,
+      inventory: userInventory,
+      accounts: userAccounts,
+      caracter: caracter
+    };
 }
 
 export class UsersService {
@@ -87,7 +87,7 @@ export class UsersService {
 
   async findAll() {
     const users = await this.userRepository.find()
-    const filteredUsers = []
+    const filteredUsers: UserInterface[] = []
     users.map(async (user: any) => {
       const once = await getUser(user)
       filteredUsers.push(once)
@@ -101,7 +101,7 @@ export class UsersService {
         [field]: value
       }
     })
-    const filteredUsers = []
+    const filteredUsers: UserInterface[] = []
     users.map(async (user: any) => {
       const once = await getUser(user)
       filteredUsers.push(once)

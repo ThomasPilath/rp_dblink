@@ -1,32 +1,6 @@
-export interface UserInterface {
-  identifier: string;
-  accounts: string;
-  group: string;
-  inventory: string;
-  job: string;
-  job_grade: string;
-  loadout: string;
-  metadata: string;
-  position: string;
-  firstname: string;
-  lastname: string;
-  dateofbirth: string;
-  sex: string;
-  height: string;
-  skin: string;
-  status: string;
-  is_dead: boolean;
-  disabled: boolean;
-  last_property: string;
-  created_at: Date;
-  last_seen: Date;
-  phone_number: string;
-  pincode: string;
-}
-
 export interface PlayerInterface {
   steamId: string;
-  playerCharId: string;
+  charId: string;
   group: string;
   last_seen_date: string;
 }
@@ -36,43 +10,59 @@ export interface IdentityInterface {
   lastname: string;
   dateofbirth: string;
   sex: string;
-  height: string;
+  height: number;
+  phone_number?: string;
+  pincode?: number;
 }
 
-export interface ActivitiesInterface {
+export interface ActivityInterface {
   job: string;
-  job_grade: string;
+  job_grade: number;
 }
 
-export interface AccountInterface {
-  black_money: number,
-  bank: number,
-  money: number
+export interface AccountsInterface {
+  black_money: number;
+  bank: number;
+  money: number;
 }
 
-export interface UtilitiesInterface {
-  phone_number: string;
-  pincode: number;
-  account: AccountInterface;
-  inventory: JSON;
+export interface InventoryItemsInterface {
+  metadata?: {
+    ammo: number;
+    durability: number;
+    components: any[];
+  };
+  slot: number;
+  count: number;
+  name: string;
+}
+
+export interface PositionInterface {
+    x: number;
+    y: number;
+    z: number;
+}
+
+export interface MetadataInterface {
+  health: number;
+  armor: number;
 }
 
 export interface CaracterInterface {
   created_at_date: string;
   status: string;
-  is_dead: number;
-  disabled: number;
-  position: JSON;
-  last_property: string;
-  skin: JSON;
-  loadout: string;
-  metadata: string;
+  is_dead: boolean;
+  disabled: boolean;
+  position: PositionInterface;
+  last_property?: string;
+  metadata: MetadataInterface;
 }
 
-export interface UserServiceInterface {
+export interface UserInterface {
   player: PlayerInterface;
   identity: IdentityInterface;
-  activities: ActivitiesInterface;
-  utilities: UtilitiesInterface;
+  activity: ActivityInterface;
+  inventory: InventoryItemsInterface[];
+  accounts: AccountsInterface;
   caracter: CaracterInterface;
 }
