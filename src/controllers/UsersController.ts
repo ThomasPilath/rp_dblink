@@ -33,4 +33,12 @@ export class UsersController {
         }
     }
 
+    async usersFieldTest(request: Request, response: Response, next: NextFunction) {
+        try {
+            return await this.users.fieldTest(request.params.field)
+        } catch (error) {
+            console.log("ERROR :", error)
+        }
+    }
+
 }

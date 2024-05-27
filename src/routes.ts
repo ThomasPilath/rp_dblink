@@ -1,5 +1,5 @@
-import { Owned_vehiclesController } from "./controller/Owner_vehiclesController"
-import { UsersController } from "./controller/UsersController"
+import { Owned_vehiclesController } from "./controllers/Owner_vehiclesController"
+import { UsersController } from "./controllers/UsersController"
 
 export const Routes = [
 // Routes pour Users
@@ -8,12 +8,19 @@ export const Routes = [
     route: "/users",
     controller: UsersController,
     action: "allUsers"
-}, {
+},
+{
     method: "get",
     route: "/users/by",
     controller: UsersController,
     action: "usersBy"
-}, 
+},
+{
+    method: "get",
+    route: "/users/test/:field",
+    controller: UsersController,
+    action: "usersFieldTest"
+},
 // Routes pour Owned_vehicles
 {
     method: "get",
