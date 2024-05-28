@@ -7,7 +7,10 @@ export class UsersController {
 
     async allUsers(request: Request, response: Response, next: NextFunction) {
         try {
-            return await this.users.findAll()
+            const users = await this.users.findAll()
+            if (!users) {
+                throw {status: 400, message: "No users found."}
+            }
         } catch (error) {
             console.log("ERROR :", error)
         }
@@ -22,7 +25,7 @@ export class UsersController {
             const users = await this.users.findByField(field, value)
             // Retourner un message si aucune valeur trouvé
             if (!users || users.length <= 0) {
-                return `No users found with ${field} is ${value}.`
+                throw {status: 400, message: `No users found with ${field} is ${value}.`}
             }
             // Filtrer les valeurs que l'on souhaite renvoyer
 
@@ -33,11 +36,19 @@ export class UsersController {
         }
     }
 
-    async usersFieldTest(request: Request, response: Response, next: NextFunction) {
+    async updateUser(request: Request, response: Response, next: NextFunction) {
         try {
-            return await this.users.fieldTest(request.params.field)
+            const identifier = request.body.identifier
+            const field = request.body.field
+            const value = request.body.value
+            const updatedUser = await this.users.update(identifier, field, value)
+            if (!updatedUser) {
+                throw {status: 400, message: "Update Error"}
+            }
+            return updatedUser
         } catch (error) {
             console.log("ERROR :", error)
+            return { status: error.status, message: error.message}
         }
     }
 

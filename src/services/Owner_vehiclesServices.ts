@@ -1,5 +1,5 @@
 import { AppDataSource } from "../data-source"
-import { Owned_vehicles } from "../entities/Owned_vehicles"
+import { Owned_vehicles } from "../entity/Owned_vehicles"
 
 export class Owned_vehiclesServices {
 

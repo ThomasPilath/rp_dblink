@@ -16,10 +16,10 @@ export const Routes = [
     action: "usersBy"
 },
 {
-    method: "get",
-    route: "/users/test/:field",
+    method: "put",
+    route: "/users/update",
     controller: UsersController,
-    action: "usersFieldTest"
+    action: "updateUser"
 },
 // Routes pour Owned_vehicles
 {

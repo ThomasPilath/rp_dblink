@@ -1,6 +1,6 @@
 import { AccountsInterface, ActivityInterface, CaracterInterface, IdentityInterface, InventoryItemsInterface, PlayerInterface, UserInterface } from "../Interfaces/UsersInterfaces";
 import { AppDataSource } from "../data-source"
-import { Users, UsersEntityInterface } from "../entities/Users"
+import { Users, UsersEntityInterface } from "../entity/Users"
 
 const getUser = async (user: UsersEntityInterface): Promise<UserInterface> => {
     const {
@@ -57,7 +57,7 @@ const getUser = async (user: UsersEntityInterface): Promise<UserInterface> => {
       job,
       job_grade
     };
-    // console.log("activities :", activities)
+    // console.log("activity :", activity)
 
     const caracter: CaracterInterface = {
       created_at_date,
@@ -95,7 +95,7 @@ export class UsersService {
     return filteredUsers
   }
 
-  async findByField(field: string, value: string,) {
+  async findByField(field: keyof Users, value: string|number) {
     const users = await this.userRepository.find({
       where: {
         [field]: value
@@ -109,13 +109,23 @@ export class UsersService {
     return filteredUsers
   }
 
-  async fieldTest(field: string) {
-    const users = await this.userRepository.find()
-    const filteredUsers = await Promise.all(users.map(async (user: any) => {
-      return await getUser(user)
-    }))
-    const result = filteredUsers[0][field]
-    return result
+  async update(id: string, field: keyof Users, value: string|number) {
+    const currentUser: UsersEntityInterface = await this.userRepository.findOne({
+      where: {
+        identifier: id
+      }
+    })
+    if (!currentUser) {
+      throw {status: "error", message: `User with identifier ${id} not found`}
+    }
+    if (!(field in currentUser)) {
+      throw {status: "error", message: `Field ${field} not found in user`}
+    }
+    const updatedUser = {
+      ...currentUser,
+      [field]: value
+    }
+    await this.userRepository.update(id, updatedUser)
+    return {identifier: id, updateField: field, updateValue: value}
   }
-
 }
